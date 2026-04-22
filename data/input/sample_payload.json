@@ -1,0 +1,59 @@
+{
+  "interfaces": [
+    {
+      "device_name": "core-rtr-01",
+      "interface_name": "GigabitEthernet0/1",
+      "interface_description": "Uplink to ISP-A",
+      "in_utilization_percent": 78.4,
+      "out_utilization_percent": 82.1,
+      "in_errors_1h": 0,
+      "out_errors_1h": 0,
+      "in_discards_1h": 12,
+      "out_discards_1h": 8
+    },
+    {
+      "device_name": "core-rtr-01",
+      "interface_name": "GigabitEthernet0/2",
+      "interface_description": "Uplink to ISP-B",
+      "in_utilization_percent": 12.3,
+      "out_utilization_percent": 15.7,
+      "in_errors_1h": 245,
+      "out_errors_1h": 3,
+      "in_discards_1h": 0,
+      "out_discards_1h": 0
+    },
+    {
+      "device_name": "dist-sw-02",
+      "interface_name": "TenGigE0/0/2",
+      "interface_description": "To dist-sw-01",
+      "in_utilization_percent": 91.7,
+      "out_utilization_percent": 88.3,
+      "in_errors_1h": 0,
+      "out_errors_1h": 0,
+      "in_discards_1h": 340,
+      "out_discards_1h": 287
+    },
+    {
+      "device_name": "edge-fw-01",
+      "interface_name": "Ethernet1",
+      "interface_description": "WAN Interface",
+      "in_utilization_percent": 94.2,
+      "out_utilization_percent": 91.8,
+      "in_errors_1h": 0,
+      "out_errors_1h": 0,
+      "in_discards_1h": 856,
+      "out_discards_1h": 742
+    },
+    {
+      "device_name": "access-sw-01",
+      "interface_name": "GigabitEthernet1/1",
+      "interface_description": "User VLAN 100",
+      "in_utilization_percent": 8.4,
+      "out_utilization_percent": 6.2,
+      "in_errors_1h": 0,
+      "out_errors_1h": 0,
+      "in_discards_1h": 0,
+      "out_discards_1h": 0
+    }
+  ]
+}

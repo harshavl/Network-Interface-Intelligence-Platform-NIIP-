@@ -1,0 +1,172 @@
+[
+  {
+    "incident_id": "INC-2025-001",
+    "timestamp": "2025-08-12T14:23:00+00:00",
+    "device_class": "core_router",
+    "text": "On a core router (core-rtr-03), interface TenGigE0/0/1 (Uplink to ISP-A) showed saturated inbound utilization (94.5%) and saturated outbound utilization (91.2%). Many discards in the last hour (340 inbound, 287 outbound). Anomaly: utilization at 94.5% exceeds critical threshold. Anomaly: 627 discards indicating buffer exhaustion or congestion.",
+    "root_cause": "congestion",
+    "root_cause_detail": "ISP uplink saturation during peak business hours. The link was correctly sized for steady-state traffic but a content delivery push from a customer SaaS provider drove traffic above capacity, exhausting buffers and causing discards.",
+    "actions_taken": [
+      "Immediately enabled QoS policy prioritizing VoIP and SaaS-control traffic",
+      "Identified top talkers via NetFlow — single SaaS download accounted for 38% of utilization",
+      "Coordinated with the customer to throttle the download window",
+      "Filed capital request for second ISP uplink with LACP bundling"
+    ],
+    "resolution_minutes": 47,
+    "confidence_label": 1.0,
+    "metadata": {"engineer": "j.kim", "ticket": "NOC-44213", "vendor": "Cisco"}
+  },
+  {
+    "incident_id": "INC-2025-002",
+    "timestamp": "2025-09-03T09:11:00+00:00",
+    "device_class": "core_router",
+    "text": "On a core router (core-rtr-01), interface GigabitEthernet0/2 (Uplink to ISP-B) showed light inbound utilization (12.3%) and light outbound utilization (15.7%). Many errors in the last hour (245 inbound, 3 outbound). Anomaly: 248 interface errors in last hour.",
+    "root_cause": "physical_layer",
+    "root_cause_detail": "Faulty SFP module on the local end. Optical receive light levels were measured at -22 dBm, well below the -16 dBm threshold for the SFP-10G-LR optic. CRC errors accumulated steadily for 3 days before alerting.",
+    "actions_taken": [
+      "Inspected SFP via show interface controller command",
+      "Confirmed low Rx light: -22 dBm vs -16 dBm threshold",
+      "Replaced SFP-10G-LR module on local end",
+      "Verified clean error counters after 24 hours of monitoring",
+      "Updated SFP replacement runbook with light-level diagnostics"
+    ],
+    "resolution_minutes": 95,
+    "confidence_label": 1.0,
+    "metadata": {"engineer": "m.patel", "ticket": "NOC-44518", "vendor": "Cisco"}
+  },
+  {
+    "incident_id": "INC-2025-003",
+    "timestamp": "2025-10-15T22:45:00+00:00",
+    "device_class": "distribution_switch",
+    "text": "On a distribution switch (dist-sw-04), interface TenGigE0/0/2 (To dist-sw-05) showed saturated inbound utilization (91.7%) and saturated outbound utilization (88.3%). Many discards in the last hour (340 inbound, 287 outbound).",
+    "root_cause": "congestion",
+    "root_cause_detail": "East-west traffic between distribution switches saturated during nightly backup window. Backup software was configured to use full available bandwidth without QoS marking.",
+    "actions_taken": [
+      "Identified backup traffic via 5-tuple flow analysis",
+      "Configured backup software to mark traffic AF11 (low priority)",
+      "Applied QoS policy on dist-sw-04 to limit AF11 to 60% during 8pm-6am window",
+      "Verified backup completion time was unaffected"
+    ],
+    "resolution_minutes": 130,
+    "confidence_label": 1.0,
+    "metadata": {"engineer": "a.singh", "ticket": "NOC-44912", "vendor": "Juniper"}
+  },
+  {
+    "incident_id": "INC-2025-004",
+    "timestamp": "2025-11-02T03:17:00+00:00",
+    "device_class": "edge_firewall",
+    "text": "On an edge firewall (edge-fw-02), interface Ethernet1 (WAN Interface) showed saturated inbound utilization (96.8%) and saturated outbound utilization (94.1%). Extreme discards in the last hour (1100 inbound, 980 outbound).",
+    "root_cause": "congestion",
+    "root_cause_detail": "Volumetric DDoS attack against a customer-facing web service. Attack peaked at 9.2 Gbps inbound on a 10 Gbps WAN link, leaving no headroom for legitimate traffic.",
+    "actions_taken": [
+      "Engaged upstream ISP DDoS mitigation service",
+      "Applied source-based rate limiting at firewall for top 50 source ASNs",
+      "Coordinated with customer to enable Cloudflare for the targeted service",
+      "Post-mortem: documented DDoS playbook update"
+    ],
+    "resolution_minutes": 28,
+    "confidence_label": 1.0,
+    "metadata": {"engineer": "r.osei", "ticket": "NOC-45203", "vendor": "Palo Alto"}
+  },
+  {
+    "incident_id": "INC-2025-005",
+    "timestamp": "2025-11-18T11:30:00+00:00",
+    "device_class": "datacenter_switch",
+    "text": "On a datacenter switch (dc-sw-03), interface TenGigE0/0/2 (To storage cluster) showed high inbound utilization (75.6%) and high outbound utilization (78.9%). Moderate discards in the last hour (45 inbound, 38 outbound). No errors.",
+    "root_cause": "buffer_exhaustion_microbursts",
+    "root_cause_detail": "Storage replication generated micro-bursts that exceeded the shallow output buffer on this 10G interface. Average utilization was moderate but instantaneous peaks at 1ms granularity exceeded line rate.",
+    "actions_taken": [
+      "Enabled per-queue depth statistics to confirm micro-bursts",
+      "Increased output queue depth from 1024 to 4096 packets",
+      "Applied WRED on the storage replication traffic class",
+      "Considered moving storage replication to a dedicated 25G interface"
+    ],
+    "resolution_minutes": 180,
+    "confidence_label": 0.9,
+    "metadata": {"engineer": "l.tanaka", "ticket": "NOC-45487", "vendor": "Arista"}
+  },
+  {
+    "incident_id": "INC-2025-006",
+    "timestamp": "2025-12-04T16:08:00+00:00",
+    "device_class": "access_switch",
+    "text": "On an access switch (access-sw-08), interface GigabitEthernet1/14 (User VLAN 200) showed light inbound utilization (8.4%) and light outbound utilization (6.2%). Moderate errors in the last hour (35 inbound, 4 outbound).",
+    "root_cause": "physical_layer",
+    "root_cause_detail": "Damaged copper patch cable in the user's cubicle. Errors only inbound because the user's machine was the source of corrupted frames; the switch's transmit side was clean.",
+    "actions_taken": [
+      "Dispatched technician to user cubicle",
+      "Visual inspection found cable bent against desk leg with damaged jacket",
+      "Replaced patch cable with new Cat6a",
+      "Verified clean error counters after 1 hour of monitoring"
+    ],
+    "resolution_minutes": 65,
+    "confidence_label": 1.0,
+    "metadata": {"engineer": "p.duarte", "ticket": "NOC-45722", "vendor": "Cisco"}
+  },
+  {
+    "incident_id": "INC-2025-007",
+    "timestamp": "2026-01-22T13:55:00+00:00",
+    "device_class": "core_router",
+    "text": "On a core router (core-rtr-04), interface GigabitEthernet0/3 (Backup link to DC2) showed high inbound utilization (82.4%) and light outbound utilization (28.7%). No errors. No discards.",
+    "root_cause": "asymmetric_traffic",
+    "root_cause_detail": "Asymmetric traffic was expected behavior — DC2 hosts a content distribution origin server that primarily serves outbound responses to inbound user requests. Confirmed with capacity planning team that this is normal.",
+    "actions_taken": [
+      "Verified asymmetric traffic was expected for the link role",
+      "Documented asymmetric baseline in monitoring config",
+      "Suppressed asymmetric-utilization alerts for this specific interface"
+    ],
+    "resolution_minutes": 22,
+    "confidence_label": 1.0,
+    "metadata": {"engineer": "j.kim", "ticket": "NOC-46011", "vendor": "Cisco"}
+  },
+  {
+    "incident_id": "INC-2025-008",
+    "timestamp": "2026-02-09T07:42:00+00:00",
+    "device_class": "distribution_switch",
+    "text": "On a distribution switch (dist-sw-07), interface TenGigE0/0/3 showed saturated inbound utilization (92.1%) and saturated outbound utilization (90.8%). Many errors in the last hour (180 inbound, 165 outbound). Many discards in the last hour (240 inbound, 210 outbound).",
+    "root_cause": "degraded_link_under_load",
+    "root_cause_detail": "Combined fault: a partially failed transceiver was causing ~3% packet errors at low load, but during a traffic spike the combination of physical errors and high utilization caused buffer exhaustion. Compound failure mode.",
+    "actions_taken": [
+      "Opened P1 ticket and notified NOC manager",
+      "Failed traffic over to redundant link via shutdown of degraded interface",
+      "Replaced QSFP+ transceiver during emergency maintenance window",
+      "Verified clean error counters at full load",
+      "Retired the failed optic with vendor RMA"
+    ],
+    "resolution_minutes": 215,
+    "confidence_label": 1.0,
+    "metadata": {"engineer": "m.patel", "ticket": "NOC-46298", "vendor": "Juniper"}
+  },
+  {
+    "incident_id": "INC-2025-009",
+    "timestamp": "2026-03-01T10:14:00+00:00",
+    "device_class": "core_router",
+    "text": "On a core router (core-rtr-02), interface GigabitEthernet0/1 (Primary uplink) showed high inbound utilization (78.4%) and high outbound utilization (82.1%). No errors. No discards.",
+    "root_cause": "capacity_planning",
+    "root_cause_detail": "Sustained growth in traffic over 6 months pushed this link into the warning band. No actual problem yet, but trending toward saturation in approximately 60 days at current growth rate.",
+    "actions_taken": [
+      "Documented current utilization trend in capacity tracking spreadsheet",
+      "Requested budget for upgrade to 10G in next quarter",
+      "Set tighter alert threshold (75%) to monitor for acceleration"
+    ],
+    "resolution_minutes": 35,
+    "confidence_label": 1.0,
+    "metadata": {"engineer": "a.singh", "ticket": "NOC-46551", "vendor": "Cisco"}
+  },
+  {
+    "incident_id": "INC-2025-010",
+    "timestamp": "2026-03-18T19:27:00+00:00",
+    "device_class": "datacenter_switch",
+    "text": "On a datacenter switch (dc-sw-01), interface TenGigE0/0/2 (To compute cluster) showed saturated inbound utilization (90.4%) and saturated outbound utilization (88.2%). Moderate discards (72 inbound, 58 outbound). No errors.",
+    "root_cause": "congestion",
+    "root_cause_detail": "Compute cluster ran a large ML training job that saturated the storage replication path. Discards were on the storage side as the compute side requested more data than the link could deliver.",
+    "actions_taken": [
+      "Identified the ML training job via NetFlow analysis",
+      "Coordinated with ML team to schedule large jobs during off-hours",
+      "Applied QoS policy to bound ML training traffic to 60% of link",
+      "Recommended migration of ML training storage to a dedicated 25G link"
+    ],
+    "resolution_minutes": 95,
+    "confidence_label": 1.0,
+    "metadata": {"engineer": "l.tanaka", "ticket": "NOC-46822", "vendor": "Arista"}
+  }
+]

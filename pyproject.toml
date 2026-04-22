@@ -1,0 +1,85 @@
+[tool.poetry]
+name = "niip"
+version = "1.0.0"
+description = "Network Interface Intelligence Platform - ML-powered anomaly detection, forecasting, root cause analysis, and health scoring for network interfaces"
+authors = ["NIIP Team <niip@example.com>"]
+readme = "README.md"
+license = "MIT"
+packages = [{include = "app"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+flask = "^3.0.0"
+flask-restx = "^1.3.0"
+flask-cors = "^4.0.0"
+flask-limiter = "^3.5.0"
+pydantic = "^2.5.0"
+pydantic-settings = "^2.1.0"
+pandas = "^2.1.4"
+numpy = "^1.26.2"
+scikit-learn = "^1.3.2"
+statsmodels = "^0.14.1"
+python-dotenv = "^1.0.0"
+gunicorn = "^21.2.0"
+structlog = "^23.2.0"
+werkzeug = "^3.0.1"
+
+# --- v2 root cause engine (optional; required only if using root_cause_v2) ---
+langchain = {version = "1.2.15", optional = true}
+langchain-core = ">=1.2.21,<2.0.0" 
+sentence-transformers = {version = "5.4.1", optional = true}
+psycopg = {version = "^3.1.0", optional = true, extras = ["binary", "pool"]}
+pgvector = {version = "^0.3.0", optional = true}
+
+# Provider-specific LangChain integrations (install only what you use)
+#langchain-openai = {version = "^0.2.0", optional = true}
+#langchain-ollama = {version = "^0.2.0", optional = true}
+#langchain-aws = {version = "^0.2.0", optional = true}
+#langchain-huggingface = {version = "^0.1.0", optional = true}
+
+[tool.poetry.extras]
+# Base v2 with the stub LLM — no external calls
+rca_v2 = ["langchain", "langchain-core", "sentence-transformers"]
+# v2 with pgvector incident store
+rca_v2_pg = ["langchain", "langchain-core", "sentence-transformers", "psycopg", "pgvector"]
+# v2 with specific LLM providers
+rca_v2_openai = ["langchain", "langchain-core", "langchain-openai", "sentence-transformers"]
+rca_v2_ollama = ["langchain", "langchain-core", "langchain-ollama", "sentence-transformers"]
+rca_v2_bedrock = ["langchain", "langchain-core", "langchain-aws", "sentence-transformers"]
+rca_v2_huggingface = ["langchain", "langchain-core", "langchain-huggingface", "sentence-transformers"]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-cov = "^4.1.0"
+pytest-flask = "^1.3.0"
+black = "^23.12.0"
+flake8 = "^6.1.0"
+mypy = "^1.7.1"
+isort = "^5.13.0"
+
+[tool.poetry.scripts]
+niip = "app.cli:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "-v --tb=short --cov=app --cov-report=term-missing"

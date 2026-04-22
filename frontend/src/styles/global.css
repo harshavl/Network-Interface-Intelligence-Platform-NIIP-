@@ -1,0 +1,221 @@
+/* ============================================================================
+   NIIP Operator Dashboard — Design Tokens
+   ============================================================================
+   Aesthetic: Industrial NOC terminal. Dense. Tactical.
+   Think Bloomberg terminal × air-traffic-control × modern monospace UI.
+   No decorative flourish. Every pixel carries information.
+   ============================================================================ */
+
+:root {
+  /* ---- Base palette (deep charcoal with tactical accents) ---- */
+  --bg-0:          #0a0e14;   /* canvas */
+  --bg-1:          #0f141c;   /* surface */
+  --bg-2:          #141b26;   /* raised */
+  --bg-3:          #1a2230;   /* hover */
+  --bg-4:          #232d3d;   /* active / selected */
+
+  --border-0:      #1e2633;
+  --border-1:      #2a3543;
+  --border-2:      #3a4759;
+
+  --text-0:        #e8eef7;   /* primary */
+  --text-1:        #a8b5c8;   /* secondary */
+  --text-2:        #6a7a92;   /* tertiary / labels */
+  --text-3:        #4a5668;   /* disabled */
+
+  /* ---- Status palette (semantic, high-contrast) ---- */
+  --status-healthy-fg:   #6ee7b7;
+  --status-healthy-bg:   rgba(110, 231, 183, 0.08);
+  --status-healthy-line: rgba(110, 231, 183, 0.35);
+
+  --status-warning-fg:   #fbbf24;
+  --status-warning-bg:   rgba(251, 191, 36, 0.08);
+  --status-warning-line: rgba(251, 191, 36, 0.35);
+
+  --status-critical-fg:  #f87171;
+  --status-critical-bg:  rgba(248, 113, 113, 0.08);
+  --status-critical-line: rgba(248, 113, 113, 0.45);
+
+  --accent:        #7dd3fc;   /* primary accent — cool cyan */
+  --accent-dim:    #0891b2;
+  --accent-glow:   rgba(125, 211, 252, 0.18);
+
+  /* ---- Severity dots (for anomaly tags) ---- */
+  --sev-low:       #a78bfa;
+  --sev-medium:    #fbbf24;
+  --sev-high:      #fb923c;
+  --sev-critical:  #f87171;
+
+  /* ---- Typography ---- */
+  --font-mono:     'JetBrains Mono', 'SF Mono', 'Menlo', 'Consolas', monospace;
+  --font-display:  'Space Grotesk', 'Inter', system-ui, sans-serif;
+
+  --fs-xs:         11px;
+  --fs-sm:         12px;
+  --fs-base:       13px;
+  --fs-md:         14px;
+  --fs-lg:         16px;
+  --fs-xl:         20px;
+  --fs-2xl:        28px;
+  --fs-3xl:        42px;
+
+  --lh-tight:      1.15;
+  --lh-normal:     1.45;
+  --lh-loose:      1.6;
+
+  /* ---- Spatial ---- */
+  --sp-0:          2px;
+  --sp-1:          4px;
+  --sp-2:          8px;
+  --sp-3:          12px;
+  --sp-4:          16px;
+  --sp-5:          24px;
+  --sp-6:          32px;
+  --sp-7:          48px;
+
+  --radius-xs:     2px;
+  --radius-sm:     4px;
+  --radius-md:     6px;
+
+  /* ---- Motion ---- */
+  --ease:          cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast:      120ms;
+  --dur-normal:    200ms;
+  --dur-slow:      400ms;
+}
+
+/* ============================================================================
+   Reset
+   ============================================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-mono);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  color: var(--text-0);
+  background: var(--bg-0);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "cv05", "zero";
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+input {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+::selection {
+  background: var(--accent-glow);
+  color: var(--text-0);
+}
+
+/* ============================================================================
+   Atmospheric background
+   ============================================================================ */
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 0%, rgba(125, 211, 252, 0.05), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(248, 113, 113, 0.03), transparent 70%);
+}
+
+/* Fine-grain noise overlay for texture */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' /></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5' /></svg>");
+}
+
+/* ============================================================================
+   Scrollbar
+   ============================================================================ */
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border-1);
+  border-radius: 0;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--border-2);
+}
+
+/* ============================================================================
+   Utilities
+   ============================================================================ */
+
+.mono      { font-family: var(--font-mono); }
+.display   { font-family: var(--font-display); }
+
+.uppercase { text-transform: uppercase; letter-spacing: 0.08em; }
+.tabular   { font-variant-numeric: tabular-nums; }
+
+.text-0    { color: var(--text-0); }
+.text-1    { color: var(--text-1); }
+.text-2    { color: var(--text-2); }
+.text-3    { color: var(--text-3); }
+.text-accent { color: var(--accent); }
+
+.healthy   { color: var(--status-healthy-fg); }
+.warning   { color: var(--status-warning-fg); }
+.critical  { color: var(--status-critical-fg); }
+
+/* Scanline effect used sparingly on status bars */
+@keyframes scan {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* Blinking dot for live status */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+.pulse { animation: pulse 1.8s ease-in-out infinite; }
+
+/* Fade-in for cards */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in { animation: fadeIn var(--dur-normal) var(--ease) both; }
